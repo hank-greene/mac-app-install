@@ -13,6 +13,11 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class CsApplication {
 
@@ -31,7 +36,20 @@ public class CsApplication {
 			for (String beanName : beanNames ) {
 				System.out.println(beanName);
 			}
+
+			try {
+
+				CSVReader reader = new CSVReader(new FileReader("my-expenses-10-eoy-work.csv"));
+
+				String[] record = null;
+
+				while ((record = reader.readNext()) != null) {
+					System.out.println(record[0]+" "+record[1]+" "+record[2]+" "+record[3]+" "+record[4]+" "+record[5]+" "+record[6]);
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		};
 	}
-
 }
