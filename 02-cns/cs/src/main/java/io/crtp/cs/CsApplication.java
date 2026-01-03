@@ -21,6 +21,7 @@ import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 @SpringBootApplication
 public class CsApplication {
@@ -35,11 +36,71 @@ public class CsApplication {
 
 			System.out.println("inspect the beans");
 
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (String beanName : beanNames ) {
-				System.out.println(beanName);
+			Connection conn = null;
+
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver"); // Explicitly register the driver
+				conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/",
+					"sblrndb",
+					"reacher-landman-calvin"
+				);
+				System.out.println("It worked!");
+			} catch (ClassNotFoundException e) {
+				System.out.println("Driver class not found: " + e.getMessage());
+			} catch (SQLException e) {
+				System.out.println("SQL error: " + e.getMessage());
 			}
+
+			try {
+				Statement stmt = conn.createStatement(); 
+				String sql = "DROP DATABASE IF EXISTS ACCOUNTING25";
+				stmt.executeUpdate(sql);
+				System.out.println("transactions table dropped.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				System.out.println("Transactions table did not exist.");
+			}
+
+			try {
+				Statement stmt = conn.createStatement();
+				String sql = "CREATE DATABASE ACCOUNTING25";
+				stmt.executeUpdate(sql);
+				System.out.println("Created transactions table.");
+			} catch (Exception ex) {
+				//ex.printStackTrace();
+				System.out.println("Error creating transactions table.");
+			}
+
+			try {
+				Statement stmt = conn.createStatement();
+				String sql = "USE ACCOUNTING25";
+				stmt.executeUpdate(sql);
+				sql = "CREATE TABLE TRANSACTIONS " +
+					"(id INTEGER not NULL, " +
+					" date VARCHAR(10), " + 
+					" account VARCHAR(15), " + 
+					" amount DECIMAL(4,2), " + 
+					" PRIMARY KEY ( id ))"; 
+				stmt.executeUpdate(sql);
+				System.out.println("Created transactions table.");
+			} catch (Exception ex) {
+				//ex.printStackTrace();
+				System.out.println(ex.toString());
+				System.out.println("Error creating transactions table.");
+			}
+
+			try {
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			//String[] beanNames = ctx.getBeanDefinitionNames();
+			//Arrays.sort(beanNames);
+			//for (String beanName : beanNames ) {
+			//	System.out.println(beanName);
+			//}
 
 			try {
 
@@ -55,19 +116,7 @@ public class CsApplication {
 				ex.printStackTrace();
 			}
 
-			try {
-				Class.forName("com.mysql.cj.jdbc.Driver"); // Explicitly register the driver
-				Connection conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/lrndb?useSSL=false",
-					"sblrndb",
-					"reacher-landman-calvin"
-				);
-				System.out.println("It worked!");
-			} catch (ClassNotFoundException e) {
-				System.out.println("Driver class not found: " + e.getMessage());
-			} catch (SQLException e) {
-				System.out.println("SQL error: " + e.getMessage());
-			}
+
 
 		};
 	}
