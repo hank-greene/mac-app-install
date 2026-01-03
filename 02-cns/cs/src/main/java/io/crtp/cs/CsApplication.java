@@ -22,6 +22,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+
+import java.math.BigDecimal;
 
 @SpringBootApplication
 public class CsApplication {
@@ -77,10 +80,10 @@ public class CsApplication {
 				String sql = "USE ACCOUNTING25";
 				stmt.executeUpdate(sql);
 				sql = "CREATE TABLE TRANSACTIONS " +
-					"(id INTEGER not NULL, " +
+					"(id INTEGER not NULL AUTO_INCREMENT, " +
 					" date VARCHAR(10), " + 
 					" account VARCHAR(15), " + 
-					" amount DECIMAL(4,2), " + 
+					" amount DECIMAL(9,4), " + 
 					" PRIMARY KEY ( id ))"; 
 				stmt.executeUpdate(sql);
 				System.out.println("Created transactions table.");
@@ -102,6 +105,9 @@ public class CsApplication {
 			//	System.out.println(beanName);
 			//}
 
+			//String trxInsert = "INSERT INTO transactions (date, account, amount) VALUES (?, ?, ?)";
+			//PreparedStatement pst = conn.prepareStatement(trxInsert);
+
 			try {
 
 				CSVReader reader = new CSVReader(new FileReader("my-expenses-10-eoy-work.csv"));
@@ -109,7 +115,29 @@ public class CsApplication {
 				String[] record = null;
 
 				while ((record = reader.readNext()) != null) {
-					System.out.println(record[0]+" "+record[1]+" "+record[2]+" "+record[3]+" "+record[4]+" "+record[5]+" "+record[6]);
+
+					try {
+						System.out.println(record[0]+" "+record[1]+" "+record[2]+" "+record[3]+" "+record[4]+" "+record[5]+" "+record[6]);
+
+						System.out.println(record[2]);
+
+						String trxInsert = "INSERT INTO transactions (date, account, amount) VALUES (?, ?, ?)";
+						PreparedStatement pst = conn.prepareStatement(trxInsert);
+
+
+						if (new String(record[2]).isEmpty()) {
+							record[2] = "0";
+						}
+
+						pst.setString(1,record[0]);
+						pst.setString(2,record[1]);
+						pst.setBigDecimal(3,new BigDecimal(record[2]));
+						pst.executeUpdate();
+						pst.close();
+					} catch(Exception x){
+						System.out.println(x.toString());
+					}
+
 				}
 
 			} catch (Exception ex) {
