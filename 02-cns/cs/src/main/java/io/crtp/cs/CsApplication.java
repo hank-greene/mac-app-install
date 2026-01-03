@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 @SpringBootApplication
 public class CsApplication {
 
@@ -50,6 +54,21 @@ public class CsApplication {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver"); // Explicitly register the driver
+				Connection conn = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/lrndb?useSSL=false",
+					"sblrndb",
+					"reacher-landman-calvin"
+				);
+				System.out.println("It worked!");
+			} catch (ClassNotFoundException e) {
+				System.out.println("Driver class not found: " + e.getMessage());
+			} catch (SQLException e) {
+				System.out.println("SQL error: " + e.getMessage());
+			}
+
 		};
 	}
 }
