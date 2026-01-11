@@ -110,7 +110,7 @@ public class CsApplication {
 
 			try {
 
-				CSVReader reader = new CSVReader(new FileReader("my-expenses-10-eoy-work.csv"));
+				CSVReader reader = new CSVReader(new FileReader("my-expenses-10-eoy-LAST.csv"));
 
 				String[] record = null;
 
@@ -137,15 +137,14 @@ public class CsApplication {
 					} catch(Exception x){
 						System.out.println(x.toString());
 					}
-
 				}
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 
-
-
 		};
+		
 	}
+
 }
