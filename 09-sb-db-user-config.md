@@ -20,7 +20,7 @@ WITH GRANT OPTION;
 
 ---- executed commands
 CREATE USER 'sblrndb'@'localhost' IDENTIFIED BY 'reacher-landman-calvin';
-GRANT ALL PRIVILEGES ON *.* TO 'sblrndb'@'localhost'
+GRANT ALL PRIVILEGES ON *.* TO 'sblrndb'@'localhost';
 WITH GRANT OPTION;
 
 CREATE USER 'sblrndb'@'%' IDENTIFIED BY 'reacher-landman-calvin';
